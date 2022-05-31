@@ -74,3 +74,6 @@ Note: If you want to place the jar outside, you can use ../ in the jar name to t
 
 Class-Path means where our source files is stored? (in this case src/main/java) and any folder under java
 is a package.
+
+Our Manifest file gets copied into the .jar we create. This way it ends up referring to the .java files while in source,
+but the copy that gets packed refer to the .class files that existed in the mirrored directory.
