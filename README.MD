@@ -72,3 +72,5 @@ Then to run, you can use "java -jar <JarName.jar>"
 
 Note: If you want to place the jar outside, you can use ../ in the jar name to travel back.
 
+Class-Path means where our source files is stored? (in this case src/main/java) and any folder under java
+is a package.
