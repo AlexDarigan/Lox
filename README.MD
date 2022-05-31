@@ -77,3 +77,5 @@ is a package.
 
 Our Manifest file gets copied into the .jar we create. This way it ends up referring to the .java files while in source,
 but the copy that gets packed refer to the .class files that existed in the mirrored directory.
+
+Can't use java filepath/*.java, if we require other java files.
