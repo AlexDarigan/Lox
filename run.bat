@@ -1,1 +1,1 @@
-java -jar .\Lox.jar
+java -jar .\Lox.jar %1

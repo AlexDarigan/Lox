@@ -1,20 +1,39 @@
 package com.craftinginterpreters.lox;
 
+import java.util.List;
 
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
-public class Interpreter implements Expr.Visitor<Object> {
-
-    void interpret(Expr expr) {
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expr);
-            System.out.println(stringify(value));
-        } catch (RuntimeError error) {
-            Lox.runtimeError(error);
+            for(Stmt statement: statements) {
+                execute(statement);
+            }
+        } catch(RuntimeError err) {
+                Lox.runtimeError(err);
         }
     }
+        
 
     public Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    public void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
     }
 
     @Override
@@ -56,6 +75,7 @@ public class Interpreter implements Expr.Visitor<Object> {
                 if(left instanceof String && right instanceof String) {
                     return (String) left + (String) right;
                 }
+               
 
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings");
         }
