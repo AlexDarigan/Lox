@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.craftinginterpreters.lox.Stmt.Class;
+
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Enviroment globals = new Enviroment();
     private final Map<Expr,Integer> locals = new HashMap<>();
@@ -65,6 +67,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
         executeBlock(stmt.statements, new Enviroment(enviroment));
+        return null;
+    }
+
+    @Override
+    public Void visitClassStmt(Class stmt) {
+        enviroment.define(stmt.name.lexeme, null);
+        LoxClass klass = new LoxClass(stmt.name.lexeme);
+        enviroment.assign(stmt.name, klass);
         return null;
     }
 

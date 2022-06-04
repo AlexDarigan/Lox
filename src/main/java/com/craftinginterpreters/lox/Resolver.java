@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.craftinginterpreters.lox.Stmt.Class;
+
 
 
 public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
@@ -74,6 +76,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         beginScope();
         resolve(stmt.statements);
         endScope();
+        return null;
+    }
+
+    @Override
+    public Void visitClassStmt(Class stmt) {
+        declare(stmt.name);
+        define(stmt.name);
         return null;
     }
 
