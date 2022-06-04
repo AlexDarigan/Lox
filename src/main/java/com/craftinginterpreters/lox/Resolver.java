@@ -16,7 +16,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         this.interpreter = interpreter;
     }
 
-    private enum FunctionType { NONE, FUNCTION }
+    private enum FunctionType { NONE, FUNCTION, METHOD }
 
     void resolve(List<Stmt> statements) {
         for(Stmt statement: statements) {
@@ -79,6 +79,12 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
         declare(stmt.name);
+
+        for(Stmt.Function method: stmt.methods) {
+            FunctionType declaration = FunctionType.METHOD;
+            resolveFunction(method, declaration);
+        }
+
         define(stmt.name);
         return null;
     }
