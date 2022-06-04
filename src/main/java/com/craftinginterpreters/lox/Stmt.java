@@ -77,11 +77,11 @@ abstract class Stmt {
     }
 
     static class While extends Stmt {
-        final Expr expression;
+        final Expr condition;
         final Stmt body;
 
-        While(Expr expression, Stmt body) {
-            this.expression = expression;
+        While(Expr condition, Stmt body) {
+            this.condition = condition;
             this.body = body;
         }
 
@@ -120,11 +120,11 @@ abstract class Stmt {
     }
 
     static class Return extends Stmt {
-        final Token name;
+        final Token keyword;
         final Expr value;
 
-        Return(Token name, Expr value) {
-            this.name = name;
+        Return(Token keyword, Expr value) {
+            this.keyword = keyword;
             this.value = value;
         }
 

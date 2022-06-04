@@ -1,11 +1,15 @@
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Enviroment globals = new Enviroment();
+    private final Map<Expr,Integer> locals = new HashMap<>();
     private Enviroment enviroment = globals;
+
 
     Interpreter() {
         globals.define("clock", new LoxCallable() {
@@ -39,6 +43,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     public void execute(Stmt stmt) {
         stmt.accept(this);
+    }
+
+    void resolve(Expr expr, int depth) {
+        locals.put(expr, depth);
     }
 
     void executeBlock(List<Stmt> statments, Enviroment enviroment) {
@@ -85,7 +93,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
-        while(isTruthy(evaluate(stmt.expression))) {
+        while(isTruthy(evaluate(stmt.condition))) {
             execute(stmt.body);
         }
         return null;
@@ -118,7 +126,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);
-        enviroment.assign(expr.name, value);
+        Integer distance = locals.get(expr);
+        if(distance != null) {
+            enviroment.assignAt(distance, expr.name, value);
+        } else {
+            globals.assign(expr.name, value);
+        }
         return value;
     }
 
@@ -231,7 +244,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
-        return enviroment.get(expr.name);
+        return lookUpVariable(expr.name, expr);
+    }
+
+    private Object lookUpVariable(Token name, Expr expr) {
+        Integer distance = locals.get(expr);
+        if(distance != null) {
+            return enviroment.getAt(distance, name.lexeme);
+        } else {
+            return globals.get(name);
+        }
     }
 
     private void checkNumberOperand(Token operator, Object operand) {

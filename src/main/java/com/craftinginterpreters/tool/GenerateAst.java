@@ -28,10 +28,10 @@ public class GenerateAst {
             "Expression : Expr expression",
             "Function   : Token name,List<Token> params,List<Stmt> body",
             "If     : Expr condition,Stmt thenBranch,Stmt elseBranch",
-            "While  : Expr expression,Stmt body",
+            "While  : Expr condition,Stmt body",
             "Var    :   Token name,Expr initializer",
             "Print      : Expr expression",
-            "Return     : Token name,Expr value"
+            "Return     : Token keyword,Expr value"
         ));
     }
 
