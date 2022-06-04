@@ -17,6 +17,7 @@ public class LoxClass implements LoxCallable {
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
+        System.out.println("instance created");
         LoxInstance instance = new LoxInstance(this);
         return instance;
     }
