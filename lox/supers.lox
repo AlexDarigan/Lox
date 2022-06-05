@@ -1,0 +1,3 @@
+class Bagel {}
+class Donut < Bagel {}
+print Donut;
